@@ -1,0 +1,134 @@
+[
+  {
+    "copyright": "David Golden",
+    "license": "Apache 2.0",
+    "name": "CPAN-Common-Index",
+    "url": "https://metacpan.org/dist/CPAN-Common-Index"
+  },
+  {
+    "copyright": "David Golden, Ricardo Signes, Adam Kennedy and Contributors",
+    "license": "the same as Perl 5",
+    "name": "CPAN-Meta",
+    "url": "https://metacpan.org/dist/CPAN-Meta"
+  },
+  {
+    "copyright": "Leon Timmermans",
+    "license": "the same as Perl 5",
+    "name": "CPAN-Meta-Check",
+    "url": "https://metacpan.org/dist/CPAN-Meta-Check"
+  },
+  {
+    "copyright": "David Golden and Ricardo Signes",
+    "license": "the same as Perl 5",
+    "name": "CPAN-Meta-Requirements",
+    "url": "https://metacpan.org/dist/CPAN-Meta-Requirements"
+  },
+  {
+    "copyright": "Adam Kennedy",
+    "license": "the same as Perl 5",
+    "name": "CPAN-Meta-YAML",
+    "url": "https://metacpan.org/dist/CPAN-Meta-YAML"
+  },
+  {
+    "copyright": "Tatsuhiko Miyagawa",
+    "license": "the same as Perl 5",
+    "name": "Carton",
+    "url": "https://metacpan.org/dist/Carton"
+  },
+  {
+    "copyright": "David Golden",
+    "license": "Apache 2.0",
+    "name": "Class-Tiny",
+    "url": "https://metacpan.org/dist/Class-Tiny"
+  },
+  {
+    "copyright": "Johan Vromans",
+    "license": "the same as Perl 5",
+    "name": "Getopt-Long",
+    "url": "https://metacpan.org/dist/Getopt-Long"
+  },
+  {
+    "copyright": "Christian Hansen",
+    "license": "the same as Perl 5",
+    "name": "HTTP-Tiny",
+    "url": "https://metacpan.org/dist/HTTP-Tiny"
+  },
+  {
+    "copyright": "Makamaka Hannyaharamitu",
+    "license": "the same as Perl 5",
+    "name": "JSON-PP",
+    "url": "https://metacpan.org/dist/JSON-PP"
+  },
+  {
+    "copyright": "Daniel Peder, Chase Whitener, Jens Rehsack",
+    "license": "the same as Perl 5",
+    "name": "MIME-Base32",
+    "url": "https://metacpan.org/dist/MIME-Base32"
+  },
+  {
+    "copyright": "Tatsuhiko Miyagawa",
+    "license": "the same as Perl 5",
+    "name": "Menlo",
+    "url": "https://metacpan.org/dist/Menlo"
+  },
+  {
+    "copyright": "Tatsuhiko Miyagawa",
+    "license": "the same as Perl 5",
+    "name": "Menlo-Legacy",
+    "url": "https://metacpan.org/dist/Menlo-Legacy"
+  },
+  {
+    "copyright": "Ken Williams, Matt Trout, David Golden",
+    "license": "the same as Perl 5",
+    "name": "Module-Metadata",
+    "url": "https://metacpan.org/dist/Module-Metadata"
+  },
+  {
+    "copyright": "David Golden",
+    "license": "Apache 2.0",
+    "name": "Path-Tiny",
+    "url": "https://metacpan.org/dist/Path-Tiny"
+  },
+  {
+    "copyright": "Perl 5 Porters",
+    "license": "the same as Perl 5",
+    "name": "Search-Dict",
+    "url": "https://metacpan.org/dist/Search-Dict"
+  },
+  {
+    "copyright": "Yuval Kogman",
+    "license": "The MIT (X11) License",
+    "name": "Try-Tiny",
+    "url": "https://metacpan.org/dist/Try-Tiny"
+  },
+  {
+    "copyright": "Martijn Koster, Gisle Aas",
+    "license": "the same as Perl 5",
+    "name": "URI",
+    "url": "https://metacpan.org/dist/URI"
+  },
+  {
+    "copyright": "Shoichi Kaji",
+    "license": "the same as Perl 5",
+    "name": "cpm",
+    "url": "https://github.com/skaji/cpm"
+  },
+  {
+    "copyright": "Matt S Trout and Contributors",
+    "license": "the same as Perl 5",
+    "name": "local-lib",
+    "url": "https://metacpan.org/dist/local-lib"
+  },
+  {
+    "copyright": "Max Maischein",
+    "license": "the same as Perl 5",
+    "name": "parent",
+    "url": "https://metacpan.org/dist/parent"
+  },
+  {
+    "copyright": "John Peacock",
+    "license": "the same as Perl 5",
+    "name": "version",
+    "url": "https://metacpan.org/dist/version"
+  }
+]

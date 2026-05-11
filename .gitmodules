@@ -1,0 +1,6 @@
+[submodule "cpm"]
+	path = cpm
+	url = https://github.com/skaji/cpm
+[submodule "perl-cpan-index-generate"]
+	path = perl-cpan-index-generate
+	url = https://github.com/skaji/perl-cpan-index-generate

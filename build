@@ -1,0 +1,153 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use File::Basename qw(dirname);
+use File::Spec::Functions qw(rel2abs);
+use Cwd qw(cwd);
+use File::Temp qw(tempdir);
+use File::Find ();
+use JSON::PP ();
+use File::Copy qw(copy);
+use CPAN::DistnameInfo ();
+
+my $DIR = dirname(rel2abs(__FILE__));
+my $LOCAL_LIB = "$DIR/local";
+my $JSON = JSON::PP->new->utf8->pretty->canonical->space_before(0)->indent_length(2);
+
+my $final = shift // "$DIR/cpm-backport";
+$final = rel2abs($final);
+
+my $tempdir = tempdir('cpm-build-XXXXXX', CLEANUP => $ENV{CMPBB_CLEANUP} // 0);
+my $new_checkout = rel2abs("$tempdir/cpm");
+
+system 'cpanm', '-n', '-L', $LOCAL_LIB, '--installdeps', '.'
+  and die;
+
+$ENV{PATH} = join ':', "$LOCAL_LIB/bin", "$DIR/bin", $ENV{PATH};
+$ENV{PERL5LIB} = join ':', grep defined, "$LOCAL_LIB/lib/perl5", $ENV{PERL5LIB};
+
+system 'git', 'clone', "$DIR/cpm/.git", $new_checkout
+  and die;
+
+{
+  open my $in, '<', "$new_checkout/META.json" or die $!;
+  my $meta = $JSON->decode(scalar do { local $/; <$in> });
+  close $in;
+
+  my $prereqs = $meta->{prereqs};
+  for my $phase_data (values %$prereqs) {
+    my %all_reqs = map %$_, values %$phase_data;
+    delete $all_reqs{perl};
+    %$phase_data = (
+      requires => \%all_reqs,
+    );
+  }
+
+  open my $out, '>', "$new_checkout/META.json" or die $!;
+  print { $out } $JSON->encode($meta);
+  close $out;
+}
+
+my @copy;
+{
+  open my $in, '<', "$new_checkout/author/copyrights-and-licenses.json" or die $!;
+  @copy = @{ $JSON->decode(scalar do { local $/; <$in> }) };
+  close $in;
+
+  open my $add_in, '<', "$DIR/add-copyrights.json" or die $!;
+  push @copy, @{ $JSON->decode(scalar do { local $/; <$add_in> }) };
+  close $add_in;
+
+  @copy = sort { $a->{name} cmp $b->{name} } @copy;
+
+  open my $out, '>', "$new_checkout/author/copyrights-and-licenses.json" or die $!;
+  print { $out } $JSON->encode(\@copy);
+  close $out;
+}
+
+{
+  chdir "$new_checkout";
+
+  open my $out, '>', 'cpanfile' or die $!;
+  open my $in, '-|', 'mymeta-cpanfile' or die $!;
+  while (my $line = <$in>) {
+    print { $out } $line;
+  }
+  close $in;
+  close $out;
+
+  system 'cpanm', '-n', '-L', $LOCAL_LIB, '--installdeps', '.'
+    and die;
+
+  chdir $DIR;
+}
+
+my @files;
+File::Find::find(
+  {
+    no_chdir => 1,
+    wanted => sub {
+      return
+        unless -f;
+      return
+        unless /\bscript\b/ || /\.(?:pl|t|pm)\z/;
+      push @files, $_;
+    },
+  },
+  "$new_checkout/lib",
+  "$new_checkout/script",
+  "$new_checkout/t",
+  "$new_checkout/xt",
+);
+
+@files = sort @files;
+system "$^X", "$DIR/convert.pl", @files
+  and die;
+
+system "$^X", "$DIR/fatpack-convert.pl", "$new_checkout/author/fatpack.pl"
+  and die;
+
+$ENV{GIT_DESCRIBE} = `git describe --all --dirty`;
+$ENV{GIT_COMMIT_ID} = `git rev-parse --short HEAD`;
+
+system "$^X", "$new_checkout/author/fatpack.pl"
+  and die;
+
+my %need_copy = (
+  cpm => 1,
+);
+
+{
+  open my $fh, '<', "$new_checkout/author/index.txt" or die $!;
+  while (my $line = <$fh>) {
+    next
+      if $line =~ /^(?:#|$)/;
+    my ($module, $version, $cpanpath) = split ' ', $line;
+    my $dist = CPAN::DistnameInfo->new($cpanpath);
+    $need_copy{$dist->dist} = 1;
+  }
+}
+
+my %extra_copy;
+
+for my $copy (@copy) {
+  if (!delete $need_copy{$copy->{name}}) {
+    $extra_copy{$copy->{name}} = 1;
+  }
+}
+
+my @message;
+if (%need_copy) {
+  push @message, "Missing copyright info:\n" . join '', map "    $_\n", sort keys %need_copy;
+}
+if (%extra_copy) {
+  push @message, "Extra copyright info:\n" . join '', map "    $_\n", sort keys %need_copy;
+}
+if (@message) {
+  die join '', map "$_\n", @message;
+}
+
+copy "$new_checkout/cpm", $final;
+chmod 0755, $final;
+print "built $final\n";

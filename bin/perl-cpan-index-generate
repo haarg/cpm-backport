@@ -1,0 +1,4 @@
+#!/bin/sh
+
+BASEDIR="$( cd "$(dirname "$0")/.."; pwd )"
+exec perl "$BASEDIR/perl-cpan-index-generate/script/perl-cpan-index-generate" "$@"
